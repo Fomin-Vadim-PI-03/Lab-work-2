@@ -1,100 +1,191 @@
 ﻿#include <iostream>
 
 
-struct Load {        //Груз
+class Load {        //Груз
+private:
     std::string contentName;    //Наименование содержимого
     int weight;                 //Вес содержимого
+
+public:
+    Load(std::string B, int C);    //Инициализация груза (конструктор)
+    Load();
+    int GetWeight();
+    void Output();    //Вывод инф. о грузе
+  
 };
 
-void InitLoad(Load &A, std::string B, int C) {    //Инициализация груза
-    A.contentName = B;
-    A.weight = C;
+Load::Load(std::string B, int C) {
+    contentName = B;
+    weight = C;
 }
 
-void OutputLoad(Load A) {    //Вывод инф. о грузе
-    printf("Тип содержимого: %s\n", A.contentName.c_str());
-    printf("Вес содержимого (в одном к-ре): %d\n", A.weight);
+Load::Load() {
+    contentName = "none";
+    weight = 0;
+}
+
+int Load::GetWeight() {
+    return weight;
+}
+
+void Load::Output() {
+    printf("Тип содержимого: %s\n", contentName.c_str());
+    printf("Вес содержимого (в одном к-ре): %d\n", weight);
 }
 
 
 
-struct Container {    //Контейнер
+class Container {    //Контейнер
+private:
     std::string destinationAddress;    //Адрес назначения
     std::string IDNumber;              //Идентификационный номер
     Load load;                         //Груз в контейнере
+
+public:
+    Container(std::string B, std::string C, Load D);    //Инициализация контейнера (конструктор)
+    Container();
+    Load GetLoad();
+    void correctContainerID(std::string B);    //Скорректировать ID контейнера
+    void Output();    //Вывод инф. о контейнере
+    
 };
 
-void InitContainer(Container &A, std::string B, std::string C, Load D) {    //Инициализация контейнера
-    A.destinationAddress = B;
-    A.IDNumber = C;
-    A.load = D;
+Container::Container(std::string B, std::string C, Load D) {
+    destinationAddress = B;
+    IDNumber = C;
+    load = D;
 }
 
-void correctContainerID(Container &A, std::string B) {    //Скорректировать ID контейнера
-    A.IDNumber = B;
+Container::Container() {
+    destinationAddress = "none";
+    IDNumber = "none";
 }
 
-void OutputContainer(Container A) {    //Вывод инф. о контейнере
-    printf("Адрес назначения: %s\n", A.destinationAddress.c_str());
-    printf("Идентификационный номер к-ра: %s\n", A.IDNumber.c_str());
-    OutputLoad(A.load);
+Load Container::GetLoad() {
+    return load;
+}
+
+void Container::correctContainerID(std::string B) {
+    IDNumber = B;
+}
+
+void Container::Output() {
+    printf("Адрес назначения: %s\n", destinationAddress.c_str());
+    printf("Идентификационный номер к-ра: %s\n", IDNumber.c_str());
+    load.Output();
 }
 
 
 
-struct Team {     //Команда
+class Team{     //Команда
+private:
     int numberOfPeople;           //Кол-во членов команды
     std::string foremanName;      //Имя бригадира
+
+public:
+    Team(int B, std::string C);    //Инициализация команды (конструктор)
+    Team();
+    int GetNumberOfPeople();
+    void Output();    //Вывод инф. о команде
 };
 
-void InitTeam(Team &A, int B, std::string C) {    //Инициализация команды
-    A.numberOfPeople = B;
-    A.foremanName = C;
+Team::Team(int B, std::string C) {
+    numberOfPeople = B;
+    foremanName = C;
 }
 
-void OutputTeam(Team A) {    //Вывод инф. о команде
-    printf("Кол-во членов команды: %d\n", A.numberOfPeople);
-    printf("Имя бригадира: %s\n", A.foremanName.c_str());
+Team::Team() {
+    numberOfPeople = 0;
+    foremanName = "none";
+}
+
+int Team::GetNumberOfPeople() {
+    return numberOfPeople;
+}
+
+void Team::Output() {
+    printf("Кол-во членов команды: %d\n", numberOfPeople);
+    printf("Имя бригадира: %s\n", foremanName.c_str());
 }
 
 
 
-struct Captain {     //Капитан
+class Captain{     //Капитан
+private:
     std::string name;             //Имя
     std::string licenseNumber;    //№ лицензии
     Team team;                    //Команда капитана
+
+public:
+    Captain(std::string B, std::string C, Team D);    //Инициализация капитана (конструктор)
+    Captain();
+    Team GetTeam();
+    void Output();    //Вывод инф. о капитане
 };
 
-void InitCaptain(Captain& A, std::string B, std::string C, Team D) {    //Инициализация капитана
-    A.name = B;
-    A.licenseNumber = C;
-    A.team = D;
+Captain::Captain(std::string B, std::string C, Team D) {
+    name = B;
+    licenseNumber = C;
+    team = D;
 }
 
-void OutputCaptain(Captain A) {    //Вывод инф. о капитане
-    printf("Имя капитана: %s\n", A.name.c_str());
-    printf("№ лицензии капитана: %s\n", A.licenseNumber.c_str());
-    OutputTeam(A.team);
+Captain::Captain() {
+    name = "none";
+    licenseNumber = "none";
+}
+
+Team Captain::GetTeam() {
+    return team;
+}
+
+void Captain::Output() {
+    printf("Имя капитана: %s\n", name.c_str());
+    printf("№ лицензии капитана: %s\n", licenseNumber.c_str());
+    team.Output();
 }
 
 
 
-struct Ship {               //Корабль
+class Ship {               //Корабль
+private:
     Container container;      //Тип контейнеров, которые перевозит корабль
     int numberOfContainers;   //Кол-во контейнеров на корабле
     Captain captain;          //Капитан корабля
     bool condition;           //Состояние корабля (приемлемое/нет)
+
+public:
+    Ship(Container B, int C, Captain D, bool E);    //Инициализация корабля (конструктор)
+    Ship();
+    void AddLoad(int additionalLoad);    //Добавить груз
+    void ChangeShipContainers(Container B, int C);    //Перезагрузить корабль (другими контейнерами)
+    bool CheckViolations();    //Проверить нарушения
+    int CalcFee();    //Рассчитать плату за проход
+    void Output();    //Вывод всей инф. о корабле
 };
 
-void InitShip(Ship &A, Container B, int C, Captain D, bool E) {    //Инициализация корабля
-    A.container = B;
-    A.numberOfContainers = C;
-    A.captain = D;
-    A.condition = E;
+Ship::Ship(Container B, int C, Captain D, bool E) {
+    container = B;
+    numberOfContainers = C;
+    captain = D;
+    condition = E;
 }
 
-bool CheckViolations(Ship A) {    //Проверить нарушения
-    if (!A.condition || A.captain.team.numberOfPeople > 20 || (A.numberOfContainers * A.container.load.weight > 500)) {
+Ship::Ship() {
+    numberOfContainers = 0;
+    condition = false;
+}
+
+void Ship::AddLoad(int additionalLoad) {
+    numberOfContainers += additionalLoad;
+}
+
+void Ship::ChangeShipContainers(Container B, int C) {
+    container = B;
+    numberOfContainers = C;
+}
+
+bool Ship::CheckViolations() {
+    if (!condition || captain.GetTeam().GetNumberOfPeople() > 20 || (numberOfContainers * container.GetLoad().GetWeight() > 500)) {
         return true;
     }
     else {
@@ -102,29 +193,20 @@ bool CheckViolations(Ship A) {    //Проверить нарушения
     }
 }
 
-int CalcFee(Ship A) {    //Рассчитать плату за проход
+int Ship::CalcFee() {
     int fine = 0;
-    if (CheckViolations(A)) {
+    if (CheckViolations()) {
         fine = 5000;
     }
 
-    return (A.numberOfContainers * A.container.load.weight + fine);
+    return (numberOfContainers * container.GetLoad().GetWeight() + fine);
 }
 
-void AddLoad(Ship &A, int additionalLoad) {    //Добавить груз
-    A.numberOfContainers += additionalLoad;
-}
-
-void ChangeShipContainers(Ship& A, Container B, int C) {    //Перезагрузить корабль (другими контейнерами)
-    A.container = B;
-    A.numberOfContainers = C;
-}
-
-void OutputShip(Ship A) {    //Вывод всей инф. о корабле
-    OutputContainer(A.container);
-    printf("Кол-во контейнеров: %d\n", A.numberOfContainers);
-    OutputCaptain(A.captain);
-    if (A.condition) {
+void Ship::Output() {
+    container.Output();
+    printf("Кол-во контейнеров: %d\n", numberOfContainers);
+    captain.Output();
+    if (condition) {
         printf("Состояние приемлимое.\n");
     }
     else {
@@ -133,44 +215,54 @@ void OutputShip(Ship A) {    //Вывод всей инф. о корабле
 }
 
 
-
 int main()
 {
     setlocale(0, "");
 
-    Load fish;
-    Load furniture;
-    Container contOne;
-    Container contTwo;
-    Team teamOne;
-    Captain captainOne;
-    Ship shipOne;
+    Load fish("Fish", 50);
+    Load furniture("Furniture", 100);
+    Container contOne("-15 20 150", "1234567", fish);
+    Container contTwo("-150 70 -10", "7654321", furniture);
+    Team teamOne(10, "Joe");
+    Captain captainOne("Josh", "1234567", teamOne);
+    Ship shipOne(contOne, 10, captainOne, true);
 
-    InitLoad(fish, "Fish", 50);
-    InitLoad(furniture, "Furniture", 100);
-    InitContainer(contOne, "-15 20 150", "1234567", fish);
-    InitContainer(contTwo, "-150 70 -10", "7654321", furniture);
-    InitTeam(teamOne, 10, "Joe");
-    InitCaptain(captainOne, "Josh", "1234567", teamOne);
-    InitShip(shipOne, contOne, 10, captainOne, true);
 
-    printf("Плата за проход 1: %d\n", CalcFee(shipOne));
+    printf("Плата за проход 1: %d\n", shipOne.CalcFee());
 
-    ChangeShipContainers(shipOne, contTwo, 20);
+    shipOne.ChangeShipContainers(contTwo, 20);
 
-    printf("Плата за проход 2: %d\n", CalcFee(shipOne));
+    printf("Плата за проход 2: %d\n", shipOne.CalcFee());
 
-    AddLoad(shipOne, 10);
+    shipOne.AddLoad(10);
 
-    printf("Плата за проход 3: %d\n", CalcFee(shipOne));
+    printf("Плата за проход 3: %d\n", shipOne.CalcFee());
 
-    Ship* shipTwo = new Ship;
-    InitShip(*shipTwo, contTwo, 10, captainOne, false);
+    Ship* shipTwo = new Ship (contTwo, 10, captainOne, false);
 
-    printf("Плата за проход 4: %d\n", CalcFee(*shipTwo));
-    printf("\n");
+    printf("Плата за проход 4: %d\n\n", shipTwo->CalcFee());
 
-    OutputShip(shipOne);
+    (*shipTwo).Output();
+
+    printf("\nРабота с динамическим массивом объектов: \n");    ///
+    Ship* shipArray = new Ship[3]{{contOne, 10, captainOne, true}, {contTwo, 15, captainOne, true}, {contOne, 20, captainOne, true}};
+
+    printf("Плата за проход 5: %d\n\n", shipArray[2].CalcFee());
+
+    shipArray[0].Output();
+
+    delete[] shipArray;
+
+    printf("\nРабота с массивом динамических объектов: \n");    ///
+
+    Ship** shipArray2 = new Ship* [2] {&shipOne, shipTwo};
+
+    shipArray2[0]->AddLoad(10);
+
+    printf("Плата за проход 6: %d\n\n", shipArray2[0]->CalcFee());
+
+    delete[] shipArray2;
+    delete shipTwo;
 
     return 0;
 }
