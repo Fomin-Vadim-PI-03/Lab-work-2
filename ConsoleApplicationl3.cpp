@@ -120,6 +120,7 @@ public:
     Captain(std::string B, std::string C, Team D);    //Инициализация капитана (конструктор)
     Captain();
     Team GetTeam();
+    std::string GetLicense();
     void Output();    //Вывод инф. о капитане
 };
 
@@ -138,6 +139,10 @@ Team Captain::GetTeam() {
     return team;
 }
 
+std::string Captain::GetLicense() {
+    return licenseNumber;
+}
+
 void Captain::Output() {
     printf("Имя капитана: %s\n", name.c_str());
     printf("№ лицензии капитана: %s\n", licenseNumber.c_str());
@@ -146,33 +151,66 @@ void Captain::Output() {
 
 
 
-class Ship {               //Корабль
+class CaptainDatabase {   //База доступных капитанов (вспомог. класс)
 private:
-    Container container;      //Тип контейнеров, которые перевозит корабль
-    int numberOfContainers;   //Кол-во контейнеров на корабле
-    Captain captain;          //Капитан корабля
-    bool condition;           //Состояние корабля (приемлемое/нет)
+    Captain* Database[5];
+    int arrayCounter;
 
 public:
-    Ship(Container B, int C, Captain D, bool E);    //Инициализация корабля (конструктор)
+    CaptainDatabase() {
+        arrayCounter = 0;
+        *Database = {};
+    }
+
+    void AddEntry(Captain &A) {
+        if (arrayCounter < 5) {
+            Database[arrayCounter] = &A;
+            arrayCounter++;
+        }
+    }
+
+    Captain* GetCaptain(std::string licenseNumber) {
+        for (int i = 0; i < arrayCounter; i++) {
+            if (Database[i]->GetLicense() == licenseNumber) {
+                return Database[i];
+            }
+        }
+        return nullptr;
+    }
+
+}Database1;    //Объявление базы данных капитанов
+
+
+
+class Ship {               //Корабль
+private:
+    Container container;       //Тип контейнеров, которые перевозит корабль
+    int numberOfContainers;    //Кол-во контейнеров на корабле
+    std::string assignedCaptainLicense;    //№ лицензии капитана корабля, назначенного на судно
+    Captain* captain;          //Капитан корабля
+    bool condition;            //Состояние корабля (приемлемое/нет)
+
+public:
+    Ship(Container B, int C, std::string D, bool E);    //Инициализация корабля (конструктор)
     Ship();
     void AddLoad(int additionalLoad);    //Добавить груз
     void ChangeShipContainers(Container B, int C);    //Перезагрузить корабль (другими контейнерами)
     bool CheckViolations();    //Проверить нарушения
     int CalcFee();    //Рассчитать плату за проход
-    void Output();    //Вывод всей инф. о корабле
+    void Output();     //Вывод всей инф. о корабле
 };
 
-Ship::Ship(Container B, int C, Captain D, bool E) {
+Ship::Ship(Container B, int C, std::string D, bool E) {
     container = B;
     numberOfContainers = C;
-    captain = D;
+    captain = Database1.GetCaptain(D);
     condition = E;
 }
 
 Ship::Ship() {
     numberOfContainers = 0;
     condition = false;
+    captain = nullptr;
 }
 
 void Ship::AddLoad(int additionalLoad) {
@@ -185,7 +223,7 @@ void Ship::ChangeShipContainers(Container B, int C) {
 }
 
 bool Ship::CheckViolations() {
-    if (!condition || captain.GetTeam().GetNumberOfPeople() > 20 || (numberOfContainers * container.GetLoad().GetWeight() > 500)) {
+    if (!condition || captain->GetTeam().GetNumberOfPeople() > 20 || (numberOfContainers * container.GetLoad().GetWeight() > 500)) {
         return true;
     }
     else {
@@ -205,7 +243,7 @@ int Ship::CalcFee() {
 void Ship::Output() {
     container.Output();
     printf("Кол-во контейнеров: %d\n", numberOfContainers);
-    captain.Output();
+    captain->Output();
     if (condition) {
         printf("Состояние приемлимое.\n");
     }
@@ -224,8 +262,14 @@ int main()
     Container contOne("-15 20 150", "1234567", fish);
     Container contTwo("-150 70 -10", "7654321", furniture);
     Team teamOne(10, "Joe");
+    Team teamTwo(5, "Mark");
     Captain captainOne("Josh", "1234567", teamOne);
-    Ship shipOne(contOne, 10, captainOne, true);
+    Captain captainTwo("Jon", "7654321", teamTwo);
+
+    Database1.AddEntry(captainOne);
+    Database1.AddEntry(captainTwo);
+
+    Ship shipOne(contOne, 10, "1234567", true);
 
 
     printf("Плата за проход 1: %d\n", shipOne.CalcFee());
@@ -238,14 +282,14 @@ int main()
 
     printf("Плата за проход 3: %d\n", shipOne.CalcFee());
 
-    Ship* shipTwo = new Ship (contTwo, 10, captainOne, false);
+    Ship* shipTwo = new Ship (contTwo, 10, "7654321", false);
 
     printf("Плата за проход 4: %d\n\n", shipTwo->CalcFee());
 
     (*shipTwo).Output();
 
     printf("\nРабота с динамическим массивом объектов: \n");    ///
-    Ship* shipArray = new Ship[3]{{contOne, 10, captainOne, true}, {contTwo, 15, captainOne, true}, {contOne, 20, captainOne, true}};
+    Ship* shipArray = new Ship[3]{{contOne, 10, "1234567", true}, {contTwo, 15, "7654321", true}, {contOne, 20, "1234567", true}};
 
     printf("Плата за проход 5: %d\n\n", shipArray[2].CalcFee());
 
