@@ -7,16 +7,16 @@ private:
     int weight;                 //Вес содержимого
 
 public:
-    Load(std::string B, int C);    //Инициализация груза (конструктор)
+    Load(std::string newContentName, int newWeight);    //Инициализация груза (конструктор)
     Load();
     int GetWeight();
     void Output();    //Вывод инф. о грузе
   
 };
 
-Load::Load(std::string B, int C) {
-    contentName = B;
-    weight = C;
+Load::Load(std::string newContentName, int newWeight) {
+    contentName = newContentName;
+    weight = newWeight;
 }
 
 Load::Load() {
@@ -42,7 +42,7 @@ private:
     Load load;                         //Груз в контейнере
 
 public:
-    Container(std::string B, std::string C, Load D);    //Инициализация контейнера (конструктор)
+    Container(std::string newDestinationAddress, std::string newIDNumber, Load newLoad);    //Инициализация контейнера (конструктор)
     Container();
     Load GetLoad();
     void correctContainerID(std::string B);    //Скорректировать ID контейнера
@@ -50,10 +50,10 @@ public:
     
 };
 
-Container::Container(std::string B, std::string C, Load D) {
-    destinationAddress = B;
-    IDNumber = C;
-    load = D;
+Container::Container(std::string newDestinationAddress, std::string newIDNumber, Load newLoad) {
+    destinationAddress = newDestinationAddress;
+    IDNumber = newIDNumber;
+    load = newLoad;
 }
 
 Container::Container() {
@@ -65,8 +65,8 @@ Load Container::GetLoad() {
     return load;
 }
 
-void Container::correctContainerID(std::string B) {
-    IDNumber = B;
+void Container::correctContainerID(std::string newIDNumber) {
+    IDNumber = newIDNumber;
 }
 
 void Container::Output() {
@@ -83,15 +83,15 @@ private:
     std::string foremanName;      //Имя бригадира
 
 public:
-    Team(int B, std::string C);    //Инициализация команды (конструктор)
+    Team(int newNumberOfPeople, std::string newForemanName);    //Инициализация команды (конструктор)
     Team();
     int GetNumberOfPeople();
     void Output();    //Вывод инф. о команде
 };
 
-Team::Team(int B, std::string C) {
-    numberOfPeople = B;
-    foremanName = C;
+Team::Team(int newNumberOfPeople, std::string newForemanName) {
+    numberOfPeople = newNumberOfPeople;
+    foremanName = newForemanName;
 }
 
 Team::Team() {
@@ -117,17 +117,17 @@ private:
     Team team;                    //Команда капитана
 
 public:
-    Captain(std::string B, std::string C, Team D);    //Инициализация капитана (конструктор)
+    Captain(std::string newName, std::string newLicenseNumber, Team newTeam);    //Инициализация капитана (конструктор)
     Captain();
     Team GetTeam();
     std::string GetLicense();
     void Output();    //Вывод инф. о капитане
 };
 
-Captain::Captain(std::string B, std::string C, Team D) {
-    name = B;
-    licenseNumber = C;
-    team = D;
+Captain::Captain(std::string newName, std::string newLicenseNumber, Team newTeam) {
+    name = newName;
+    licenseNumber = newLicenseNumber;
+    team = newTeam;
 }
 
 Captain::Captain() {
@@ -162,9 +162,9 @@ public:
         *Database = {};
     }
 
-    void AddEntry(Captain &A) {
+    void AddEntry(Captain &newCaptain) {
         if (arrayCounter < 5) {
-            Database[arrayCounter] = &A;
+            Database[arrayCounter] = &newCaptain;
             arrayCounter++;
         }
     }
@@ -191,20 +191,20 @@ private:
     bool condition;            //Состояние корабля (приемлемое/нет)
 
 public:
-    Ship(Container B, int C, std::string D, bool E);    //Инициализация корабля (конструктор)
+    Ship(Container newContainer, int newNumberOfContainers, std::string newAssignedCaptainLicense, bool newCondition);    //Инициализация корабля (конструктор)
     Ship();
     void AddLoad(int additionalLoad);    //Добавить груз
-    void ChangeShipContainers(Container B, int C);    //Перезагрузить корабль (другими контейнерами)
+    void ChangeShipContainers(Container newContainer, int newNumberOfContainers);    //Перезагрузить корабль (другими контейнерами)
     bool CheckViolations();    //Проверить нарушения
     int CalcFee();    //Рассчитать плату за проход
     void Output();     //Вывод всей инф. о корабле
 };
 
-Ship::Ship(Container B, int C, std::string D, bool E) {
-    container = B;
-    numberOfContainers = C;
-    captain = Database1.GetCaptain(D);
-    condition = E;
+Ship::Ship(Container newContainer, int newNumberOfContainers, std::string newAssignedCaptainLicense, bool newCondition) {
+    container = newContainer;
+    numberOfContainers = newNumberOfContainers;
+    captain = Database1.GetCaptain(newAssignedCaptainLicense);
+    condition = newCondition;
 }
 
 Ship::Ship() {
@@ -217,9 +217,9 @@ void Ship::AddLoad(int additionalLoad) {
     numberOfContainers += additionalLoad;
 }
 
-void Ship::ChangeShipContainers(Container B, int C) {
-    container = B;
-    numberOfContainers = C;
+void Ship::ChangeShipContainers(Container newContainer, int newNumberOfContainers) {
+    container = newContainer;
+    numberOfContainers = newNumberOfContainers;
 }
 
 bool Ship::CheckViolations() {
